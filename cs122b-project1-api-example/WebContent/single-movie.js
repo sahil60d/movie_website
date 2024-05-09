@@ -51,8 +51,18 @@ function handleMovieResult(resultData) {
         rowHTML += "<tr>";
 
         rowHTML += "<th>";
+        /*
         for (let j = 0; j < resultData[i]["movie_genres"].length; j++) {
             rowHTML += resultData[i]["movie_genres"][j]["genre_name"];
+            if (j < resultData[i]["movie_genres"].length - 1) {
+                rowHTML += ", ";
+            }
+        } */
+
+        for (let j = 0; j < resultData[i]["movie_genres"].length; j++) {
+            rowHTML += '<a href = "browse.html?genre=' + resultData[i]["movie_genres"][j]["genre_name"] + '">'
+                + resultData[i]["movie_genres"][j]["genre_name"]
+                + '</a>';
             if (j < resultData[i]["movie_genres"].length - 1) {
                 rowHTML += ", ";
             }

@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Payment</title>
+    </head>
 <body>
-$END$
+<h1>Payment</h1>
+
+<!-- Payment form -->
+<form id="payment_form">
+    <label for="first_name">First Name</label>
+    <input type="text" id="first_name" name="first_name" required>
+    <br>
+    <label for="last_name">Last Name</label>
+    <input type="text" id="last_name" name="last_name" required>
+    <br>
+    <label for="credit_card">Credit Card</label>
+    <input type="text" id="credit_card" name="credit_card" required>
+    <br>
+    <label for="expiration">Expiration</label>
+    <input type="text" id="expiration" name="expiration" required>
+    <br>
+    <button type="submit">Submit Payment</button>
+</form>
+
+<!-- Payment error message -->
+<p id="payment_error" style="color: red;"></p>
+
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Load our own JS file -->
+<script src="payment.js"></script>
+
 </body>
 </html>
