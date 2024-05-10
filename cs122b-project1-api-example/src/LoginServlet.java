@@ -51,6 +51,7 @@ public class LoginServlet extends HttpServlet {
 
         JsonObject responseJsonObject = new JsonObject();
 
+        /*
         User user = userDAO.findUser(username, password);
 
         if (user != null) {
@@ -73,6 +74,31 @@ public class LoginServlet extends HttpServlet {
             }
         }
 
-        response.getWriter().write(responseJsonObject.toString());
+         */
+
+        try {
+            if (userDAO.verifyCredentials(username, password)) {
+                // Login success:
+
+                // set this user into the session
+                request.getSession().setAttribute("user", new User(username));
+
+                responseJsonObject.addProperty("status", "success");
+                responseJsonObject.addProperty("message", "success");
+            } else {
+                // Login fail
+                responseJsonObject.addProperty("status", "fail");
+                // Log to localhost log
+                request.getServletContext().log("Login failed");
+                // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
+                if (userDAO.findUser(username, null) == null) {
+                    responseJsonObject.addProperty("message", "Invalid username or password");
+                }
+            }
+
+            response.getWriter().write(responseJsonObject.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
