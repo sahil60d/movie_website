@@ -53,7 +53,8 @@ public class SingleMovieServlet extends HttpServlet {
             // Get a connection from dataSource
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT m.id, m.title, m.year, m.director, r.rating from movies m, ratings r where m.id = r.movieId and m.id = ?";
+            //String query = "SELECT m.id, m.title, m.year, m.director, r.rating from movies m, ratings r where m.id = r.movieId and m.id = ?";
+            String query = "SELECT m.id, m.title, m.year, m.director, r.rating from movies m LEFT JOIN ratings r ON m.id = r.movieId where m.id = ?";
 
             // Declare our statement
             PreparedStatement statement = conn.prepareStatement(query);

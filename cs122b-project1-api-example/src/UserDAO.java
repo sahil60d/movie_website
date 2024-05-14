@@ -8,7 +8,7 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 
 public class UserDAO {
 
-    // Create a dataSource which registered in web.
+    // Create a dataSource which registered in web.xml
     private static DataSource dataSource;
 
     public UserDAO(DataSource dataSource) {

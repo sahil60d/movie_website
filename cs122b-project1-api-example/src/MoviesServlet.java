@@ -64,7 +64,7 @@ public class MoviesServlet extends HttpServlet {
 
         //String query = "SELECT m.id, m.title, m.year, m.director, r.rating from movies m, ratings r where m.id = r.movieId order by r.rating desc limit 20";
         // Start constructing the SQL query
-        StringBuilder queryBuilder = new StringBuilder("SELECT m.id, m.title, m.year, m.director, r.rating FROM movies m JOIN ratings r on r.movieid = m.id WHERE 1=1");
+        StringBuilder queryBuilder = new StringBuilder("SELECT m.id, m.title, m.year, m.director, r.rating FROM movies m LEFT JOIN ratings r on r.movieid = m.id WHERE 1=1");
 
         // Check if the search parameters are not null and not empty, then append to the query
         if (title != null && !title.isEmpty()) {
@@ -157,6 +157,9 @@ public class MoviesServlet extends HttpServlet {
                 String movie_year = rs.getString("year");
                 String movie_director = rs.getString("director");
                 String movie_rating = rs.getString("rating");
+                if (movie_rating == null) {
+                    movie_rating = "N/A";
+                }
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();

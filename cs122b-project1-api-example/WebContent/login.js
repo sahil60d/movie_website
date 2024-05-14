@@ -37,6 +37,8 @@ function submitLoginForm(formSubmitEvent) {
      */
     formSubmitEvent.preventDefault();
 
+    var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf("/", 2));
+
     $.ajax(
         "api/login", {
             method: "POST",

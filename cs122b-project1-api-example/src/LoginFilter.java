@@ -52,6 +52,19 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.html");
         allowedURIs.add("login.js");
         allowedURIs.add("api/login");
+        allowedURIs.add("_dashboard");
+        allowedURIs.add("api/employee-login");
+        allowedURIs.add("_dashboard/employee-login.html");
+        allowedURIs.add("_dashboard/employee-login.js");
+        allowedURIs.add("_dashboard/employee-dashboard.html");
+        allowedURIs.add("_dashboard/employee-dashboard.js");
+        allowedURIs.add("api/metadata");
+        allowedURIs.add("_dashboard/add-star.html");
+        allowedURIs.add("_dashboard/add-star.js");
+        allowedURIs.add("api/add-star");
+        allowedURIs.add("_dashboard/add-movie.html");
+        allowedURIs.add("_dashboard/add-movie.js");
+        allowedURIs.add("api/add-movie");
     }
 
     public void destroy() {
