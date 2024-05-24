@@ -1,6 +1,7 @@
 // Description: This file contains the JavaScript code for the browse page.
 
 let currentPage = 1; // initialize current page number
+let autoCompleteCache = {}; // initialize cache for autocomplete
 
 /******************* Data Handling *******************/
 
@@ -344,6 +345,125 @@ function addToCart(movieId) {
     });
 }
 
+// Handles Lookup for AutoComplete
+function handleLookup(query, doneCallback) {
+    console.log("Autocomplete initiated");
+
+    // Check if the query is in the cache
+    if (query in autoCompleteCache) {
+        console.log("Autocomplete cache hit");
+
+        // Call the callback function provided by the autocomplete library
+        // Add "{suggestions: jsonData}" to satisfy the library response format according to
+        // the "Response Format" section in documentation
+        doneCallback({ suggestions: autoCompleteCache[query] });
+        return;
+    }
+
+    // Send the query to the server using AJAX call
+    jQuery.ajax({
+        dataType: "json",
+        url: "api/autocomplete?query=" + escape(query),
+        method: 'GET',
+        success: function(data) {
+            console.log("Autocomplete successful");
+
+            // Pass the data, query, and doneCallback function into the success handler
+            handleLookupAjaxSuccess(data, query, doneCallback);
+        },
+        error: function(errorData) {
+            console.log("Autocomplete error");
+            console.log(errorData);
+        }
+    });
+}
+
+// Handles AJAX success callback function
+function handleLookupAjaxSuccess(data, query, doneCallback) {
+    console.log("Autocomplete ajax successful");
+
+    // Cache the data
+    autoCompleteCache[query] = data;
+
+    // Parse the string into JSON
+    //let jsonData = JSON.parse(data);
+    //console.log(jsonData);
+
+    // Call the callback function provided by the autocomplete library
+    // Add "{suggestions: jsonData}" to satisfy the library response format according to
+    // the "Response Format" section in documentation
+    doneCallback({ suggestions: data });
+}
+
+// Handles selecting a suggestion
+function handleSelectSuggestion(suggestion) {
+    console.log("Selected suggestion: " + suggestion["value"]);
+    console.log("Suggestion data: ", suggestion.data.movieId);
+
+    // redirect to the single-movie page
+    window.location.replace("single-movie.html?id=" + suggestion.data.movieId);
+}
+
+// Handle Normal Search on query from full text search
+function handleNormalSearch(query) {
+    event.preventDefault(); // Prevent the form from submitting in the traditional way
+
+    console.log("Searching for: " + query);
+
+    // set default sort parameters
+    let primarySort = "";
+    let primaryOrder = "";
+    let secondarySort = "";
+    let secondaryOrder = "";
+    let limit = 25;
+
+    const sortParams = getSavedSort();
+
+    if (sortParams != null) {
+        primarySort = sortParams.sort1;
+        primaryOrder = sortParams.order1;
+        secondarySort = sortParams.sort2;
+        secondaryOrder = sortParams.order2;
+        limit = sortParams.limit;
+    }
+
+    // Send the search query to the server using AJAX
+    jQuery.ajax({
+        dataType: "json",
+        url: "api/movies",
+        method: 'GET',
+        data: {
+            title: query,
+            year: "",
+            director: "",
+            star: "",
+            sort1: primarySort,
+            order1: primaryOrder,
+            sort2: secondarySort,
+            order2: secondaryOrder,
+            limit: limit
+        },
+        success: function(response) {
+            // If the search is successful, display the results
+            handleSearchResult(response);
+
+            // save search parameters
+            saveSearchParams({
+                title: query,
+                year: "",
+                director: "",
+                star: "",
+                genre: "",
+                titleStart: ""
+            });
+        },
+        error: function(error) {
+            // Handle any errors that occur during the search
+            console.error('Search failed:', error);
+        }
+    });
+}
+
 /******************* Session Storage *******************/
 
 // save last search query
@@ -446,6 +566,26 @@ $(document).ready(function() {
     }
 })
 
+// Autocomplete for search bar
+$('#autocomplete').autocomplete({
+    lookup: function(query, doneCallback) {
+        handleLookup(query, doneCallback);
+    },
+    onSelect: function(suggestion) {
+        handleSelectSuggestion(suggestion);
+    },
+
+    deferRequestBy: 300,
+    minChars: 3
+});
+
+// Bind pressing enter key to handler function
+$('#autocomplete').keypress(function(event) {
+    if (event.keyCode == 13) {
+        handleNormalSearch($('#autocomplete').val());
+    }
+})
+
 /******************* Event Listeners *******************/
 
 // Attach event listener to the search form
@@ -521,3 +661,4 @@ document.querySelectorAll('.browse-link').forEach(function(link) {
         });
     })
 })
+document.getElementById('full_text_search_form').addEventListener('submit', handleSelectSuggestion);
