@@ -71,6 +71,8 @@ public class AutocompleteServlet extends HttpServlet {
 
             }
 
+            response.setCharacterEncoding("UTF-8");
+
             // write JSON string to output
             out.write(jsonArray.toString());
             rs.close();

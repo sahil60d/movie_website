@@ -363,6 +363,7 @@ function handleLookup(query, doneCallback) {
     // Send the query to the server using AJAX call
     jQuery.ajax({
         dataType: "json",
+        contentType: "application/json; charset=utf-8",
         url: "api/autocomplete?query=" + encodeURIComponent(query),
         method: 'GET',
         success: function(data) {
@@ -387,7 +388,7 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 
     // Parse the string into JSON
     //let jsonData = JSON.parse(data);
-    //console.log(jsonData);
+    console.log(data);
 
     // Call the callback function provided by the autocomplete library
     // Add "{suggestions: jsonData}" to satisfy the library response format according to
