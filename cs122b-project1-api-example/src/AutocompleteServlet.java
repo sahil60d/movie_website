@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,6 +40,8 @@ public class AutocompleteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json"); // Response mime type
 
+        PrintWriter out = response.getWriter();
+
         String searchQuery = request.getParameter("query");
 
         // Create match query
@@ -69,11 +72,13 @@ public class AutocompleteServlet extends HttpServlet {
             }
 
             // write JSON string to output
-            response.getWriter().write(jsonArray.toString());
+            out.write(jsonArray.toString());
             rs.close();
             statement.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            out.close();
         }
     }
 

@@ -363,7 +363,7 @@ function handleLookup(query, doneCallback) {
     // Send the query to the server using AJAX call
     jQuery.ajax({
         dataType: "json",
-        url: "api/autocomplete?query=" + escape(query),
+        url: "api/autocomplete?query=" + encodeURIComponent(query),
         method: 'GET',
         success: function(data) {
             console.log("Autocomplete successful");
