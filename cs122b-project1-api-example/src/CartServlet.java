@@ -95,7 +95,7 @@ public class CartServlet extends HttpServlet {
         String price = String.valueOf((int)(Math.random() * 41) + 10);
         int quantity = 1;
         int total = quantity * Integer.parseInt(price);
-        String[] movieInfo = {title, price, String.valueOf(quantity), String.valueOf(total)};
+        String[] movieInfo = {title, price, String.valueOf(quantity), String.valueOf(total), movieId};
 
         // get the previous items in a ArrayList
         ArrayList<String[]> cart = (ArrayList<String[]>) session.getAttribute("cart");

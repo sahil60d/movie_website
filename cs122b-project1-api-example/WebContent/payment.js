@@ -22,12 +22,21 @@ function handlePaymentResult(event) {
         method: "POST",    // Setting request method
         url: "api/payment", // Setting request url, which is mapped by PaymentServlet in PaymentServlet.java
         data: {
-            first_name: firstName,
-            last_name: lastName,
-            credit_card: creditCard,
+            firstName: firstName,
+            lastName: lastName,
+            ccId: creditCard,
             expiration: expiration
         },
-        success: (resultData) => handlePaymentResponse(resultData) // Setting callback function to handle data returned successfully by the PaymentServlet
+        // Callback function to be called when the request is successful
+        success: function(response) {
+            window.location.href = "confirmation.html";
+        },
+        // Callback function to be called when the request fails
+        error: function(error) {
+            console.error("There was an error submitting the payment form: ", error);
+            // display an error message to the user
+            alert("There was an error submitting the payment form. Please try again.");
+        }
     });
 }
 

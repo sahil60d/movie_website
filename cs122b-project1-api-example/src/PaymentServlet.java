@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 // Declaring a WebServlet called PaymentServlet, which maps to url "/api/payment"
 @WebServlet(name = "PaymentServlet", urlPatterns = "/api/payment")
@@ -24,10 +25,12 @@ public class PaymentServlet extends HttpServlet {
 
     // Create a dataSource which registered in web.
     private DataSource dataSource;
+    private DataSource writeDS;
 
     public void init(ServletConfig config) {
         try {
             dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+            writeDS = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/mastermoviedb");
         } catch (NamingException e) {
             e.printStackTrace();
         }
@@ -50,7 +53,7 @@ public class PaymentServlet extends HttpServlet {
         String expiration = request.getParameter("expiration");
 
         // Output stream to STDOUT
-        out.write("{ \"status\": \"success\" }");
+        //out.write("{ \"status\": \"success\" }");
 
         try {
             // Get a connection from dataSource
@@ -73,6 +76,44 @@ public class PaymentServlet extends HttpServlet {
 
             // Iterate through each row of rs
             if (rs.next()) {
+                // customer id from custonmers table using firstname, lastname, ccId
+                String query1 = "SELECT id from customers where firstName = ? and lastName = ? and ccId = ?";
+                PreparedStatement statement1 = dbcon.prepareStatement(query1);
+                statement1.setString(1, firstName);
+                statement1.setString(2, lastName);
+                statement1.setString(3, ccId);
+                ResultSet rs1 = statement1.executeQuery();
+
+                if (rs1.next()) {
+                    request.getSession().setAttribute("customerId", rs1.getString("id"));
+                } else {
+                    throw new Exception("Failed to get customer id");
+                }
+                statement1.close();
+                rs1.close();
+
+                // Add each movie stored in cart array in session to the sales table
+                Connection writeCon = writeDS.getConnection();
+
+                ArrayList<String[]> cart = (ArrayList<String[]>) request.getSession().getAttribute("cart");
+
+                for (String[] movie : cart) {
+                    String query2 = "INSERT INTO sales (customerId, movieId, saleDate) VALUES (?, ?, ?)";
+                    PreparedStatement statement2 = writeCon.prepareStatement(query2);
+                    statement2.setString(1, request.getSession().getAttribute("customerId").toString());
+                    statement2.setString(2, movie[4]);
+                    statement2.setString(3, java.time.LocalDate.now().toString());
+                    statement2.executeUpdate();
+
+                    // Check for error
+                    if (statement2.getUpdateCount() == 0) {
+                        throw new Exception("Failed to add movie to sales table");
+                    }
+
+                    statement2.close();
+                    writeCon.close();
+                }
+
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("status", "success");
@@ -80,9 +121,6 @@ public class PaymentServlet extends HttpServlet {
 
                 // write JSON string to output
                 out.write(jsonObject.toString());
-
-                // redirect to confirmation page
-                response.sendRedirect("confirmation.html");
 
             } else {
                 // Create a JsonObject based on the data we retrieve from rs
