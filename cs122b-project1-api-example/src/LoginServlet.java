@@ -30,6 +30,9 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        // mimeType
+        response.setContentType("application/json");
+
         // Verify reCAPTCHA
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
         System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
@@ -50,31 +53,6 @@ public class LoginServlet extends HttpServlet {
 
 
         JsonObject responseJsonObject = new JsonObject();
-
-        /*
-        User user = userDAO.findUser(username, password);
-
-        if (user != null) {
-            // Login success:
-
-            // set this user into the session
-            request.getSession().setAttribute("user", user);
-
-            responseJsonObject.addProperty("status", "success");
-            responseJsonObject.addProperty("message", "success");
-
-        } else {
-            // Login fail
-            responseJsonObject.addProperty("status", "fail");
-            // Log to localhost log
-            request.getServletContext().log("Login failed");
-            // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-            if (UserDAO.findUser(username, null) == null) {
-                responseJsonObject.addProperty("message", "Invalid username or password");
-            }
-        }
-
-         */
 
         try {
             if (userDAO.verifyCredentials(username, password)) {

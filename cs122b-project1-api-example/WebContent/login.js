@@ -6,21 +6,22 @@ let login_form = $("#login_form");
  */
 
 function handleLoginResult(resultDataString) {
-    let resultDataJson = JSON.parse(resultDataString);
+    //let resultDataJson = JSON.parse(resultDataString);
 
     console.log("handle login response");
-    console.log(resultDataJson);
-    console.log(resultDataJson["status"]);
+    //console.log(resultDataJson);
+    //console.log(resultDataJson["status"]);
+    console.log(resultDataString);
 
     // If login succeeds, it will redirect the user to index.html
-    if (resultDataJson["status"] === "success") {
+    if (resultDataString["status"] === "success") {
         window.location.replace("browse.html");
     } else {
         // If login fails, the web page will display
         // error messages on <div> with id "login_error_message"
         console.log("show error message");
-        console.log(resultDataJson["message"]);
-        $("#login_error_message").text(resultDataJson["message"]);
+        console.log(resultDataString["message"]);
+        $("#login_error_message").text(resultDataString["message"]);
     }
 }
 

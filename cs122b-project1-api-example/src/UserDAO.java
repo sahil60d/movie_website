@@ -21,6 +21,10 @@ public class UserDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
+        // print to console
+        System.out.println("username: " + username);
+        System.out.println("password: " + password);
+
         try {
             conn = dataSource.getConnection();
             String query = "SELECT * FROM customers WHERE email = ? AND password = ?";
