@@ -9,8 +9,16 @@
 
     <!-- Register the DataSource which defined in META-INF/context.xml-->
     <resource-ref>
-        <description>MySQL DataSource example</description>
+        <description>Datasource used for read only</description>
         <res-ref-name>jdbc/moviedb</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <!-- Register mastermoviedb DataSource -->
+    <resource-ref>
+        <description>Datasource used for read/write</description>
+        <res-ref-name>jdbc/mastermoviedb</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>

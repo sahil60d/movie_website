@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
             response.getWriter().write(responseJsonObject.toString());
             return;
         }
-
+        /*
         // Verify user login
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -75,8 +75,39 @@ public class LoginServlet extends HttpServlet {
             }
 
             response.getWriter().write(responseJsonObject.toString());
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+         */
+
+        // Verify user login
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        User user = userDAO.findUser(username, password);
+
+        JsonObject responseJsonObject = new JsonObject();
+
+        if (user != null) {
+            // Login success:
+            // set this user into the session
+            request.getSession().setAttribute("user", user);
+            responseJsonObject.addProperty("status", "success");
+            responseJsonObject.addProperty("message", "success");
+        } else {
+            // Login fail
+            responseJsonObject.addProperty("status", "fail");
+            // Log to localhost log
+            request.getServletContext().log("Login failed");
+            // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
+            if (userDAO.findUser(username, null) == null) {
+                responseJsonObject.addProperty("message", "Invalid username or password");
+            }
+        }
+
+        response.getWriter().write(responseJsonObject.toString());
     }
 }
