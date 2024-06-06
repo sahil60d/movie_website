@@ -328,7 +328,7 @@ function goToPage(page) {
 
 // Add to cart function. Adds movie id to session storage
 function addToCart(movieId) {
-    console.error('Adding to cart: ' + movieId);
+    console.log('Adding to cart: ' + movieId);
 
     jQuery.ajax({
         method: 'POST',

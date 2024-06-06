@@ -80,6 +80,11 @@ function handleMovieResult(resultData) {
         }
         rowHTML += "</th>";
 
+        // Add to cart button
+        rowHTML += "<th>";
+        rowHTML += '<button onclick="addToCart(\'' + resultData[i]["movie_id"] + '\')">Add to Cart</button>';
+        rowHTML += "</th>";
+
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
@@ -102,3 +107,24 @@ jQuery.ajax({
     url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleMovieResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
+
+// Add to cart function
+// Add to cart function. Adds movie id to session storage
+function addToCart(movieId) {
+    console.log('Adding to cart: ' + movieId);
+
+    jQuery.ajax({
+        method: 'POST',
+        url: 'api/cart',
+        data: {
+            movieId: movieId
+        },
+        success: function(response) {
+            console.log('Added to cart:', response);
+        },
+        error: function(error) {
+            console.error('Add to cart failed:', error);
+        }
+    });
+}
+
