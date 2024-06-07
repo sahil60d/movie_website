@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
 
         // mimeType
         response.setContentType("application/json");
-
+/*
         // Verify reCAPTCHA
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
         System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
@@ -46,6 +46,8 @@ public class LoginServlet extends HttpServlet {
             response.getWriter().write(responseJsonObject.toString());
             return;
         }
+
+ */
         /*
         // Verify user login
         String username = request.getParameter("username");
